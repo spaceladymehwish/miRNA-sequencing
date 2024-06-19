@@ -1,0 +1,11 @@
+#building indices
+bowtie-build ~/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/Homo_sapiens.GRCh38.dna.primary_assembly.fa miRNA_indices
+
+#mapping reads to reference genome
+/home/mehwish/anaconda3/mirdeep2-master/bin/mapper.pl ERR9659988_trim.fastq -e -h -i -j -m -p /home/mehwish/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/miRNA_indices -s reads_collapsed.fa -t mapped_mirna.arf -v -u -o 16
+
+#identifying novel and known from mapped reads
+/home/mehwish/anaconda3/mirdeep2-master/bin/miRDeep2.pl reads_collapsed.fa Homo_sapiens_no_description.fa mapped_mirna.arf mature_no_description.fa none hairpin_hsa.fa -t human >report.log
+
+#quantification of expressed known and novel miRNA
+~/anaconda3/mirdeep2-master/bin/quantifier.pl -p ~/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/hairpin.fa -m ~/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/mature.fa -r ~/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/mapper_mirdeep2/ERR9659988_collapsed.fa -t human -k

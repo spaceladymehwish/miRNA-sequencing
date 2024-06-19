@@ -1,0 +1,24 @@
+current dir:	/home/mehwish/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/PRJNA201039/mapping
+mapper command:	/home/mehwish/anaconda3/mirdeep2-master/bin/mapper.pl SRR837437_trim.fastq -e -h -i -j -m -p /home/mehwish/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/bowtie_indices/miRNA_indices -s reads_collapsed.fa -t mapped_mirna.arf -v -u -o 16
+
+timestamp:	15_06_2023_t_13_07_27
+
+parsing fastq to fasta format
+fastq2fasta.pl SRR837437_trim.fastq > dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads.fa
+converting rna to dna alphabet
+rna2dna.pl dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads.fa > dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_dna.fa
+discarding sequences with non-canonical letters
+fastaparse.pl dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_dna.fa -b > dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_letters.fa 2>dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_discarded.fa
+discarding short reads
+fastaparse.pl dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_letters.fa -a 18 > dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_no_short.fa 2>dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_too_short
+collapsing reads
+collapse_reads_md.pl dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_no_short.fa seq > dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_nr.fa
+mapping reads to genome index
+bowtie -p 16 -f -n 0 -e 80 -l 18 -a -m 5 --best --strata  /home/mehwish/Desktop/4_Alzheimers_multiomics/Alzheimers_miRNA_rnaseq/bowtie_indices/miRNA_indices  --al dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/SRR837437_trim.fastq_mapped --un dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/SRR837437_trim.fastq_not_mapped  dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/reads_nr.fa dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/mappings.bwt 2>bowtie.log
+
+convert_bowtie_output.pl dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/mappings.bwt > dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/mappings.arf
+trimming unmapped nts in the 3' ends
+parse_mappings.pl dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/mappings.arf -j > dir_mapper_seq_SRR837437_trim.fastq_3201207542_15_06_2023_t_13_07_27/mappings_trim.arf
+
+############################################################
+
